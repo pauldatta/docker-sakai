@@ -1,2 +1,6 @@
 sakai/tomcat
 sakai/local.properties
+.DS_Store
+tomcat/webapps
+tomcat/components
+tomcat/lib

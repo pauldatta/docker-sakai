@@ -7,8 +7,6 @@
 # This builds on debian jessie
 FROM java:openjdk-8u66
 
-MAINTAINER Matthew Buckett <matthew.buckett@it.ox.ac.uk>
-
 WORKDIR /tmp
 
 # Create the group and user for Sakai
@@ -17,8 +15,8 @@ RUN groupadd --gid 10000 sakai && \
 
 # The 1024 bit root CAs are no longer in Debian (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=812708)
 # and the cross signing isn't working in older versions of openssl
-COPY thawte_Premium_Server_CA.pem /usr/local/share/ca-certificates/thawte_permium_server_ca.crt
-RUN update-ca-certificates
+# COPY thawte_Premium_Server_CA.pem /usr/local/share/ca-certificates/thawte_permium_server_ca.crt
+# RUN update-ca-certificates
 
 # Need to get the tomcat binary and unpack
 RUN mkdir -p /opt/tomcat && \
@@ -59,7 +57,7 @@ ENV LANG en.UTF-8
 # TODO fix this
 #RUN /usr/sbin/locale-gen $LANG
 
-COPY ./entrypoint.sh /opt/scripts/entrypoint.sh
+#COPY ./entrypoint.sh /opt/scripts/entrypoint.sh
 
 ENV CATALINA_OPTS_MEMORY -Xms256m -Xmx1524m
 
@@ -85,6 +83,11 @@ ENV CATALINA_OPTS \
 
 # If we run in debug mode
 ENV JPDA_OPTS -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
+
+# Copy all the files in
+COPY ./components /opt/tomcat/components/
+COPY ./lib /opt/tomcat/sakai-lib/
+COPY ./webapps /opt/tomcat/webapps/
 
 ENTRYPOINT ["/opt/scripts/entrypoint.sh"]
 

@@ -2,12 +2,15 @@
 # It copies a build of Sakai ontop of the sakai tomcat
 #
 
-FROM buckett/sakai-tomcat
+FROM fresco/sakai-tomcat
 
 # Copy all the files in
-COPY tomcat/components /opt/tomcat/components/
-COPY tomcat/lib /opt/tomcat/sakai-lib/
-COPY tomcat/webapps /opt/tomcat/webapps/
+# COPY tomcat/components /opt/tomcat/components/
+# COPY tomcat/lib /opt/tomcat/sakai-lib/
+# COPY tomcat/webapps /opt/tomcat/webapps/
+COPY sakai.properties /opt/tomcat/sakai/sakai.properties
+
+COPY ./entrypoint.sh /opt/scripts/entrypoint.sh
 
 # We don't copy local.properties for production
 COPY  log4j.properties placeholder.properties sakai.quartz.properties /opt/tomcat/sakai/
