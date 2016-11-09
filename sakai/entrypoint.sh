@@ -36,17 +36,17 @@ if [ -f /opt/tomcat/sakai/log4j.properties ] ; then
 fi
 
 # If we want to listen on a specific IP
-# if [ -z "${CATALINA_LISTEN}" ]; then
-#   CATALINA_LISTEN="0.0.0.0"
-# fi
-# Tag this onto the end of the CATALINA_OPTS
-# export CATALINA_OPTS="$CATALINA_OPTS -Dcatalina.listen=$CATALINA_LISTEN"
+if [ -z "${CATALINA_LISTEN}" ]; then
+  CATALINA_LISTEN="0.0.0.0"
+fi
+#Tag this onto the end of the CATALINA_OPTS
+export CATALINA_OPTS="$CATALINA_OPTS -Dcatalina.listen=$CATALINA_LISTEN"
 
 # Enable JMX on port 5400 by default, but allow it to be overridden
-# if [ -z "${CATALINA_JMX_PORT}" ]; then
-#   CATALINA_JMX_PORT="5400"
-# fi
-# export CATALINA_OPTS="$CATALINA_OPTS_MEMORY $CATALINA_OPTS_EXTRA $CATALINA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.rmi.port=${CATALINA_JMX_PORT} -Dcom.sun.management.jmxremote.port=${CATALINA_JMX_PORT} -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.local.only=true"
+if [ -z "${CATALINA_JMX_PORT}" ]; then
+  CATALINA_JMX_PORT="5400"
+fi
+export CATALINA_OPTS="$CATALINA_OPTS_MEMORY $CATALINA_OPTS_EXTRA $CATALINA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.rmi.port=${CATALINA_JMX_PORT} -Dcom.sun.management.jmxremote.port=${CATALINA_JMX_PORT} -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.local.only=true"
 
 # We do the su at the end so we can setup permissions throughout
-# exec su -s /bin/sh -c 'exec "$0" "$@"' ${SAKAI_USER:-sakai} -- $@
+exec su -s /bin/sh -c 'exec "$0" "$@"' ${SAKAI_USER:-sakai} -- $@
