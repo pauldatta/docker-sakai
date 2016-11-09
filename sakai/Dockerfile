@@ -11,6 +11,7 @@ FROM fresco/sakai-tomcat
 COPY sakai.properties /opt/tomcat/sakai/sakai.properties
 
 COPY ./entrypoint.sh /opt/scripts/entrypoint.sh
+RUN chmod +x /opt/scripts/entrypoint.sh
 
 # We don't copy local.properties for production
 COPY  log4j.properties placeholder.properties sakai.quartz.properties /opt/tomcat/sakai/
