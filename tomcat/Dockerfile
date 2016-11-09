@@ -1,7 +1,6 @@
 # This is the dockerfile for the Sakai tomcat.
-# Basically this is just a copy of tomcat that has it's classloaders modified for Sakai.
-# This doesn't have a copy of Sakai put into it so it can be used for development where Sakai is mounted from outside
-# the container.
+# Contains everything Sakai needs to run minus a properties file that gets added with more 
+# tweaks in ../sakai
 
 # Use the OpenJDK image
 # This builds on debian jessie
@@ -12,11 +11,6 @@ WORKDIR /tmp
 # Create the group and user for Sakai
 RUN groupadd --gid 10000 sakai && \
   useradd --uid 10000 --gid 10000 --system sakai 
-
-# The 1024 bit root CAs are no longer in Debian (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=812708)
-# and the cross signing isn't working in older versions of openssl
-# COPY thawte_Premium_Server_CA.pem /usr/local/share/ca-certificates/thawte_permium_server_ca.crt
-# RUN update-ca-certificates
 
 # Need to get the tomcat binary and unpack
 RUN mkdir -p /opt/tomcat && \
@@ -30,7 +24,6 @@ RUN mkdir -p /opt/tomcat && \
   # We change the classloader for tomcat so that we can map in a folder that just contains the Sakai additions.
   mkdir /opt/tomcat/sakai-lib && \
   sed -i.orig '/^common.loader=/s@$@,"${catalina.base}/sakai-lib/*.jar"@' conf/catalina.properties
-
 
 # Override with custom server.xml
 COPY server.xml /opt/tomcat/conf/server.xml
@@ -56,8 +49,6 @@ ENV LANG en.UTF-8
 
 # TODO fix this
 #RUN /usr/sbin/locale-gen $LANG
-
-#COPY ./entrypoint.sh /opt/scripts/entrypoint.sh
 
 ENV CATALINA_OPTS_MEMORY -Xms256m -Xmx1524m
 
